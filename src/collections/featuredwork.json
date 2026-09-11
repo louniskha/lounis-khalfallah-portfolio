@@ -1,0 +1,65 @@
+[
+  {
+    "name": "Cosm'Éthique",
+    "description": "Projet e-commerce orienté expérience utilisateur, conversion et visibilité digitale",
+    "tags": ["E-commerce", "Wordpress", "SEO", "UX"],
+    "video": "/assets/works/cosmethique.mp4",
+    "url": "https://dsp5-mkt-f24a-4-5-g6.fr/fr/",
+    "isShow": true
+  },
+  {
+    "name": "RicoOG",
+    "description": "Bibliothèque d'inspiration dédiée à la création d'Open Graph et au design digital",
+    "tags": ["Open Graph", "Design", "Inspiration"],
+    "image": "/assets/works/ricoog.jpg",
+    "video": "/assets/works/ricoog.mp4",
+    "url": "https://ricoog.com/",
+    "isShow": true
+  },
+  {
+    "name": "GradientsHub",
+    "description": "Plateforme de ressources et d'outils dédiée aux gradients et à la création digitale",
+    "tags": ["Design", "Resources", "Tools"],
+    "image": "/assets/works/gradientshub.jpg",
+    "video": "/assets/works/gradientshub.mp4",
+    "url": "https://gradientshub.com"
+  },
+  {
+    "name": "Luon Models",
+    "description": "Création d'un site vitrine avec une approche centrée sur l'image de marque et l'expérience digitale",
+    "tags": ["Website", "Branding", "UX"],
+    "image": "/assets/works/luonmodels.jpg",
+    "video": "/assets/works/luonmodels.mp4",
+    "url": "https://luonmodels.netlify.app/"
+  },
+  {
+    "name": "Ricoui",
+    "description": "Portfolio digital conçu autour du design, de l'identité visuelle et de l'expérience utilisateur",
+    "tags": ["Portfolio", "Design", "UX"],
+    "image": "/assets/works/ricoui.jpg",
+    "video": "/assets/works/ricoui.mp4",
+    "url": "/work/ricoblog2024"
+  },
+  {
+    "name": "3D Valentines Assets",
+    "description": "Création d'assets 3D destinés aux projets créatifs et aux expériences digitales",
+    "tags": ["3D", "Blender", "Creative"],
+    "image": "/assets/works/3d-valentines.jpg",
+    "video": "/assets/works/3d-valentines.mp4",
+    "url": "/work/3dvalentine"
+  },
+  {
+    "name": "UIUXDECK",
+    "description": "Bibliothèque de ressources et d'outils dédiée au design d'interfaces et à l'expérience utilisateur",
+    "tags": ["UI/UX", "Design", "Resources"],
+    "image": "/assets/works/uiuxdeck.jpg",
+    "url": "http://uiuxdeck.com/"
+  },
+  {
+    "name": "Inspoweb",
+    "description": "Bibliothèque d'inspiration dédiée aux interfaces et aux tendances du web design",
+    "tags": ["Web Design", "Inspiration", "Digital"],
+    "image": "/assets/works/inspoweb.jpg",
+    "url": "https://inspoweb.com/"
+  }
+]
