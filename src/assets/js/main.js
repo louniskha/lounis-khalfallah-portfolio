@@ -1,7 +1,7 @@
 // Add your javascript here
 import AOS from 'aos';
 
-window.darkMode = false;
+window.darkMode = true;
 
 const stickyClasses = [];
 const unstickyClasses = [];
