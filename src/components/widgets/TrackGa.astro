@@ -1,34 +1,166 @@
 ---
 const GAID = import.meta.env.PUBLIC_GA4_ID;
 const UMAMIId = import.meta.env.PUBLIC_UMAMI_ID;
-// const GAID = '';
-
-if (!GAID) {
-    // console.error("Google Analytics ID (PUBLIC_GA4_ID) is missing!");
-}
 ---
 
-<!-- GA4 跟踪代码 -->
-{GAID && (
-    <>
-      <script  is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GAID}`} ></script>
-      <script  is:inline define:vars={{ GAID }}>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', GAID);
-      </script>
-    </>
-)}
+{(GAID || UMAMIId) && (
+  <>
+    <div
+      id="cookie-banner"
+      class="cookie-banner"
+      role="dialog"
+      aria-label="Consentement aux statistiques"
+    >
+      <div class="cookie-content">
+        <p>
+          Ce site utilise des outils de mesure d’audience pour comprendre
+          sa fréquentation et améliorer votre expérience.
+        </p>
 
-<!-- UMAMIId 跟踪代码 -->
-{UMAMIId && (
-    <script
-        async
-        defer
-        is:inline
-        data-website-id={UMAMIId}
-        src="https://cloud.umami.is/script.js"
-    ></script>
-)}
+        <div class="cookie-buttons">
+          <button
+            id="cookie-accept"
+            class="cookie-button accept"
+            type="button"
+          >
+            Accepter
+          </button>
 
+          <button
+            id="cookie-refuse"
+            class="cookie-button refuse"
+            type="button"
+          >
+            Refuser
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script is:inline define:vars={{ GAID, UMAMIId }}>
+      const CONSENT_KEY = "analytics-consent";
+
+      function loadAnalytics() {
+        if (
+          GAID &&
+          !document.querySelector("#google-analytics-script")
+        ) {
+          const script = document.createElement("script");
+
+          script.id = "google-analytics-script";
+          script.async = true;
+          script.src =
+            `https://www.googletagmanager.com/gtag/js?id=${GAID}`;
+
+          document.head.appendChild(script);
+
+          window.dataLayer = window.dataLayer || [];
+
+          function gtag(...args) {
+            window.dataLayer.push(args);
+          }
+
+          gtag("js", new Date());
+          gtag("config", GAID);
+        }
+
+        if (
+          UMAMIId &&
+          !document.querySelector("#umami-script")
+        ) {
+          const script = document.createElement("script");
+
+          script.id = "umami-script";
+          script.async = true;
+          script.defer = true;
+          script.dataset.websiteId = UMAMIId;
+          script.src = "https://cloud.umami.is/script.js";
+
+          document.head.appendChild(script);
+        }
+      }
+
+      function hideBanner() {
+        document.querySelector("#cookie-banner")?.remove();
+      }
+
+      const consent = localStorage.getItem(CONSENT_KEY);
+
+      if (consent === "accepted") {
+        loadAnalytics();
+        hideBanner();
+      }
+
+      if (consent === "refused") {
+        hideBanner();
+      }
+
+      document
+        .querySelector("#cookie-accept")
+        ?.addEventListener("click", () => {
+          localStorage.setItem(CONSENT_KEY, "accepted");
+          loadAnalytics();
+          hideBanner();
+        });
+
+      document
+        .querySelector("#cookie-refuse")
+        ?.addEventListener("click", () => {
+          localStorage.setItem(CONSENT_KEY, "refused");
+          hideBanner();
+        });
+    </script>
+
+    <style>
+      .cookie-banner {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999;
+        padding: 20px;
+        background: #2d6dc3;
+        color: white;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .cookie-content {
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+
+      .cookie-content p {
+        margin: 0 0 15px;
+        line-height: 1.5;
+      }
+
+      .cookie-buttons {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .cookie-button {
+        padding: 10px 20px;
+        border: 1px solid white;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+
+      .cookie-button.accept {
+        background: white;
+        color: #2d6dc3;
+      }
+
+      .cookie-button.refuse {
+        background: transparent;
+        color: white;
+      }
+
+      .cookie-button:hover {
+        opacity: 0.85;
+      }
+    </style>
+  </>
+)}
