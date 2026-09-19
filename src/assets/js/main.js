@@ -26,21 +26,20 @@ let headerElement = null;
 document.addEventListener("DOMContentLoaded", () => {
 	headerElement = document.getElementById("header");
 
-	if (
-		localStorage.getItem("dark_mode") &&
-		localStorage.getItem("dark_mode") === "true"
-	) {
+	if (localStorage.getItem("dark_mode") === "false") {
+		window.darkMode = false;
+		showDay();
+	} else {
 		window.darkMode = true;
 		showNight();
-	} else {
-		showDay();
 	}
+
 	stickyHeaderFuncionality();
 	applyMenuItemClasses();
 	evaluateHeaderPosition();
 	mobileMenuFunctionality();
 
-	// 初始化 AOS
+	// Initialisation AOS
 	AOS.init({
 		duration: 400,
 		easing: 'ease-out-cubic',
@@ -49,17 +48,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		delay: 0,
 	});
 });
-
-// window.toggleDarkMode = function(){
-//     document.documentElement.classList.toggle('dark');
-//     if(document.documentElement.classList.contains('dark')){
-//         localStorage.setItem('dark_mode', true);
-//         window.darkMode = true;
-//     } else {
-//         window.darkMode = false;
-//         localStorage.setItem('dark_mode', false);
-//     }
-// }
 
 window.stickyHeaderFuncionality = () => {
 	window.addEventListener("scroll", () => {
@@ -75,15 +63,11 @@ window.evaluateHeaderPosition = () => {
 		);
 		headerElement.classList.add(...stickyClasses);
 		headerElement.classList.remove(...unstickyClasses);
-		// document.getElementById("menu").classList.add("top-[75px]");
-		// document.getElementById("menu").classList.remove("top-[75px]");
 	} else {
 		headerElement.firstElementChild.classList.remove(...stickyClassesContainer);
 		headerElement.firstElementChild.classList.add(...unstickyClassesContainer);
 		headerElement.classList.add(...unstickyClasses);
 		headerElement.classList.remove(...stickyClasses);
-		// document.getElementById("menu").classList.remove("top-[56px]");
-		// document.getElementById("menu").classList.add("top-[75px]");
 	}
 };
 
@@ -91,7 +75,7 @@ document.getElementById("darkToggle").addEventListener("click", () => {
 	document.documentElement.classList.add("duration-300");
 
 	if (document.documentElement.classList.contains("dark")) {
-		localStorage.removeItem("dark_mode");
+		localStorage.setItem("dark_mode", false);
 		showDay(true);
 	} else {
 		localStorage.setItem("dark_mode", true);
@@ -107,7 +91,6 @@ function showDay(animate) {
 
 	if (animate) {
 		timeout = 500;
-
 		document.getElementById("moon").classList.add("setting");
 	}
 
@@ -118,8 +101,9 @@ function showDay(animate) {
 		document.getElementById("moon").classList.add("hidden");
 		document.getElementById("sun").classList.remove("hidden");
 
+		document.documentElement.classList.remove("dark");
+
 		if (animate) {
-			document.documentElement.classList.remove("dark");
 			document.getElementById("sun").classList.add("rising");
 		}
 	}, timeout);
@@ -133,7 +117,6 @@ function showNight(animate) {
 
 	if (animate) {
 		timeout = 500;
-
 		document.getElementById("sun").classList.add("setting");
 	}
 
@@ -144,8 +127,9 @@ function showNight(animate) {
 		document.getElementById("sun").classList.add("hidden");
 		document.getElementById("moon").classList.remove("hidden");
 
+		document.documentElement.classList.add("dark");
+
 		if (animate) {
-			document.documentElement.classList.add("dark");
 			document.getElementById("moon").classList.add("rising");
 		}
 	}, timeout);
@@ -153,12 +137,12 @@ function showNight(animate) {
 
 window.applyMenuItemClasses = () => {
 	const menuItems = document.querySelectorAll("#menu a");
+
 	for (let i = 0; i < menuItems.length; i++) {
 		if (menuItems[i].pathname === window.location.pathname) {
 			menuItems[i].classList.add("text-neutral-900", "dark:text-white");
 		}
 	}
-	//:class="{ 'text-neutral-900 dark:text-white': window.location.pathname == '{menu.url}', 'text-neutral-700 dark:text-neutral-400': window.location.pathname != '{menu.url}' }"
 };
 
 function mobileMenuFunctionality() {
