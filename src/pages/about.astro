@@ -20,11 +20,11 @@ import Toc from "@/components/widgets/Toc.astro";
 
 // Manually define page table of contents structure
 const headings = [
-  { depth: 2, slug: "about-me", text: "À propos de moi" },
+  { depth: 2, slug: "about-me", text: "About Me" },
   { depth: 2, slug: "expertise", text: "Expertise" },
-  { depth: 2, slug: "tool-stack", text: "Compétences" },
-  { depth: 2, slug: "experience", text: "Expérience" },
-  { depth: 2, slug: "lets-connect", text: "Centres d’intérêt" },
+  { depth: 2, slug: "tool-stack", text: "Tool Stack" },
+  { depth: 2, slug: "experience", text: "Experience" },
+  { depth: 2, slug: "lets-connect", text: "Let's Connect" },
 ];
 
 const filtered = headings.filter(h => h.depth <= 3);
