@@ -5,16 +5,19 @@ const UMAMIId = import.meta.env.PUBLIC_UMAMI_ID;
 
 {(GAID || UMAMIId) && (
   <>
+    <!-- Bannière de consentement -->
     <div
       id="cookie-banner"
       class="cookie-banner"
       role="dialog"
       aria-label="Consentement aux statistiques"
+      aria-describedby="cookie-description"
     >
       <div class="cookie-content">
-        <p>
+        <p id="cookie-description">
           Ce site utilise des outils de mesure d’audience pour comprendre
           sa fréquentation et améliorer votre expérience.
+          Vous pouvez accepter ou refuser ces outils.
         </p>
 
         <div class="cookie-buttons">
@@ -37,31 +40,47 @@ const UMAMIId = import.meta.env.PUBLIC_UMAMI_ID;
       </div>
     </div>
 
+    <!-- Bouton permanent de gestion des cookies -->
+    <button
+      id="cookie-settings"
+      class="cookie-settings"
+      type="button"
+      aria-label="Gérer mes cookies"
+    >
+      Gérer mes cookies
+    </button>
+
     <script is:inline define:vars={{ GAID, UMAMIId }}>
       const CONSENT_KEY = "analytics-consent";
 
+      const banner = document.querySelector("#cookie-banner");
+      const settingsButton = document.querySelector("#cookie-settings");
+      const acceptButton = document.querySelector("#cookie-accept");
+      const refuseButton = document.querySelector("#cookie-refuse");
+
       function loadAnalytics() {
-        if (
-          GAID &&
-          !document.querySelector("#google-analytics-script")
-        ) {
-          const script = document.createElement("script");
+        if (GAID) {
+          window[`ga-disable-${GAID}`] = false;
 
-          script.id = "google-analytics-script";
-          script.async = true;
-          script.src =
-            `https://www.googletagmanager.com/gtag/js?id=${GAID}`;
+          if (!document.querySelector("#google-analytics-script")) {
+            const script = document.createElement("script");
 
-          document.head.appendChild(script);
+            script.id = "google-analytics-script";
+            script.async = true;
+            script.src =
+              `https://www.googletagmanager.com/gtag/js?id=${GAID}`;
 
-          window.dataLayer = window.dataLayer || [];
+            document.head.appendChild(script);
 
-          function gtag(...args) {
-            window.dataLayer.push(args);
+            window.dataLayer = window.dataLayer || [];
+
+            function gtag(...args) {
+              window.dataLayer.push(args);
+            }
+
+            gtag("js", new Date());
+            gtag("config", GAID);
           }
-
-          gtag("js", new Date());
-          gtag("config", GAID);
         }
 
         if (
@@ -80,8 +99,58 @@ const UMAMIId = import.meta.env.PUBLIC_UMAMI_ID;
         }
       }
 
+      function disableAnalytics() {
+        if (GAID) {
+          window[`ga-disable-${GAID}`] = true;
+        }
+
+        document.querySelector("#google-analytics-script")?.remove();
+        document.querySelector("#umami-script")?.remove();
+      }
+
       function hideBanner() {
-        document.querySelector("#cookie-banner")?.remove();
+        if (banner) {
+          banner.style.display = "none";
+        }
+      }
+
+      function showBanner() {
+        if (banner) {
+          banner.style.display = "block";
+        }
+      }
+
+      function showSettingsButton() {
+        if (settingsButton) {
+          settingsButton.style.display = "block";
+        }
+      }
+
+      function hideSettingsButton() {
+        if (settingsButton) {
+          settingsButton.style.display = "none";
+        }
+      }
+
+      function acceptCookies() {
+        localStorage.setItem(CONSENT_KEY, "accepted");
+
+        loadAnalytics();
+        hideBanner();
+        showSettingsButton();
+      }
+
+      function refuseCookies() {
+        localStorage.setItem(CONSENT_KEY, "refused");
+
+        disableAnalytics();
+        hideBanner();
+        showSettingsButton();
+      }
+
+      function openCookieSettings() {
+        showBanner();
+        hideSettingsButton();
       }
 
       const consent = localStorage.getItem(CONSENT_KEY);
@@ -89,26 +158,24 @@ const UMAMIId = import.meta.env.PUBLIC_UMAMI_ID;
       if (consent === "accepted") {
         loadAnalytics();
         hideBanner();
-      }
-
-      if (consent === "refused") {
+        showSettingsButton();
+      } else if (consent === "refused") {
+        disableAnalytics();
         hideBanner();
+        showSettingsButton();
+      } else {
+        showBanner();
+        hideSettingsButton();
       }
 
-      document
-        .querySelector("#cookie-accept")
-        ?.addEventListener("click", () => {
-          localStorage.setItem(CONSENT_KEY, "accepted");
-          loadAnalytics();
-          hideBanner();
-        });
+      acceptButton?.addEventListener("click", acceptCookies);
 
-      document
-        .querySelector("#cookie-refuse")
-        ?.addEventListener("click", () => {
-          localStorage.setItem(CONSENT_KEY, "refused");
-          hideBanner();
-        });
+      refuseButton?.addEventListener("click", refuseCookies);
+
+      settingsButton?.addEventListener(
+        "click",
+        openCookieSettings
+      );
     </script>
 
     <style>
@@ -146,6 +213,7 @@ const UMAMIId = import.meta.env.PUBLIC_UMAMI_ID;
         border-radius: 6px;
         cursor: pointer;
         font-size: 14px;
+        transition: opacity 0.2s ease;
       }
 
       .cookie-button.accept {
@@ -160,6 +228,45 @@ const UMAMIId = import.meta.env.PUBLIC_UMAMI_ID;
 
       .cookie-button:hover {
         opacity: 0.85;
+      }
+
+      .cookie-settings {
+        display: none;
+        position: fixed;
+        bottom: 15px;
+        left: 15px;
+        z-index: 9998;
+        padding: 8px 12px;
+        border: 1px solid #64748b;
+        border-radius: 6px;
+        background: #ffffff;
+        color: #334155;
+        cursor: pointer;
+        font-size: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        transition:
+          background 0.2s ease,
+          color 0.2s ease;
+      }
+
+      .cookie-settings:hover {
+        background: #2d6dc3;
+        color: #ffffff;
+      }
+
+      @media (max-width: 640px) {
+        .cookie-banner {
+          padding: 16px;
+        }
+
+        .cookie-button {
+          padding: 9px 16px;
+        }
+
+        .cookie-settings {
+          bottom: 10px;
+          left: 10px;
+        }
       }
     </style>
   </>
