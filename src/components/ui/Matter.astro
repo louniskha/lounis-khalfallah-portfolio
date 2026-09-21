@@ -34,8 +34,13 @@ const { className = "" } = Astro.props;
   const initTricksAnimation = () => {
     if (animationInitialized) return;
 
-    const container = document.querySelector(".matter-wrapper");
-    const canvasContainer = document.querySelector(".tricks-canvas");
+    const container = document.querySelector(
+      ".matter-wrapper"
+    ) as HTMLElement | null;
+
+    const canvasContainer = document.querySelector(
+      ".tricks-canvas"
+    ) as HTMLElement | null;
 
     if (!container || !canvasContainer) return;
 
@@ -91,7 +96,6 @@ const { className = "" } = Astro.props;
     const runner = Runner.create();
     Runner.run(runner, engine);
 
-    // Trois murs : bas, gauche et droite
     const createBoundaries = () => {
       return [
         // Mur du bas
@@ -225,7 +229,6 @@ const { className = "" } = Astro.props;
     const createIcons = () => {
       const shuffledIcons = [...images];
 
-      // Mélange aléatoire des logos
       for (let i = shuffledIcons.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
 
@@ -236,11 +239,9 @@ const { className = "" } = Astro.props;
       }
 
       shuffledIcons.forEach((image, index) => {
-        // Position horizontale dans l'encadré
         const x =
           Math.random() * Math.max(width - 140, 40) + 70;
 
-        // Les logos commencent au-dessus de l'encadré
         const y = -100 - index * 80;
 
         const icon = new IconBody(x, y, image);
@@ -302,25 +303,21 @@ const { className = "" } = Astro.props;
         window.devicePixelRatio || 1
       );
 
-      // Mur du bas
       Body.setPosition(boundaries[0], {
         x: width / 2,
         y: height + margin,
       });
 
-      // Mur de gauche
       Body.setPosition(boundaries[1], {
         x: -margin,
         y: height / 2,
       });
 
-      // Mur de droite
       Body.setPosition(boundaries[2], {
         x: width + margin,
         y: height / 2,
       });
 
-      // Taille du mur inférieur
       Body.setVertices(boundaries[0], [
         { x: 0, y: height },
         { x: width, y: height },
@@ -328,7 +325,6 @@ const { className = "" } = Astro.props;
         { x: 0, y: height + margin * 2 },
       ]);
 
-      // Taille du mur gauche
       Body.setVertices(boundaries[1], [
         { x: -margin * 2, y: 0 },
         { x: 0, y: 0 },
@@ -336,7 +332,6 @@ const { className = "" } = Astro.props;
         { x: -margin * 2, y: height },
       ]);
 
-      // Taille du mur droit
       Body.setVertices(boundaries[2], [
         { x: width, y: 0 },
         { x: width + margin * 2, y: 0 },
