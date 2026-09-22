@@ -1,18 +1,18 @@
 [
-    {
-        "name": "Accueil",
-        "url": "/"
-    },
-    {
-        "name": "Blog",
-        "url": "/blog"
-    },
-    {
-        "name": "Projets",
-        "url": "/works"
-    },
-    {
-        "name": "À propos",
-        "url": "/about"
-    }
+  {
+    "name": "Accueil",
+    "url": "/"
+  },
+  {
+    "name": "Projets",
+    "url": "/works"
+  },
+  {
+    "name": "À propos de moi",
+    "url": "/about"
+  },
+  {
+    "name": "Blog",
+    "url": "/blog"
+  }
 ]
