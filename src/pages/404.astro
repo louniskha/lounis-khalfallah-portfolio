@@ -4,13 +4,15 @@ import PageHeader from "@/components/elements/PageHeader.astro";
 import Button from "@/components/ui/Button.astro";
 ---
 
-<PageLayout title="Page Not Found">
+<PageLayout title="Page introuvable">
   <section class="site-container m-auto min-h-[50vh] flex flex-col items-center justify-center">
     <PageHeader
-      title="404 - Page Not Found"
-      description="Button to go back to home page"
+      title="404 - Page introuvable"
+      description="La page que vous recherchez n'existe pas."
     />
+
     <div class="mt-0 flex justify-center">
-      <Button url="/">Go Home Page</Button>
+      <Button url="/">Retour à l'accueil</Button>
+    </div>
   </section>
 </PageLayout>
