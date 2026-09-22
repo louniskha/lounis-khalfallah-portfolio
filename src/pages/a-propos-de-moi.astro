@@ -218,51 +218,6 @@ const experiences = [
               <Smartphone size={22} />
               <span class="text-base font-medium text-neutral-700 dark:text-neutral-200">UI/UX Design</span>
             </div>
-
-            <div class="flex flex-shrink-0 items-center gap-2 rounded-xl bg-gradient-to-b from-[#f7f8f0] to-[#f1f2f9] px-5 py-4 dark:from-gray-900 dark:to-gray-800">
-              <Globe size={22} />
-              <span class="text-base font-medium text-neutral-700 dark:text-neutral-200">Optimisation pour les moteurs de recherche (SEO)</span>
-            </div>
-
-            <div class="flex flex-shrink-0 items-center gap-2 rounded-xl bg-gradient-to-b from-[#f7f8f0] to-[#f1f2f9] px-5 py-4 dark:from-gray-900 dark:to-gray-800">
-              <Zap size={22} />
-              <span class="text-base font-medium text-neutral-700 dark:text-neutral-200">Optimisation pour les moteurs génératifs (GEO)</span>
-            </div>
-
-            <div class="flex flex-shrink-0 items-center gap-2 rounded-xl bg-gradient-to-b from-[#f7f8f0] to-[#f1f2f9] px-5 py-4 dark:from-gray-900 dark:to-gray-800">
-              <ArrowUpRight size={22} />
-              <span class="text-base font-medium text-neutral-700 dark:text-neutral-200">Référencement payant (SEA)</span>
-            </div>
-
-            <div class="flex flex-shrink-0 items-center gap-2 rounded-xl bg-gradient-to-b from-[#f7f8f0] to-[#f1f2f9] px-5 py-4 dark:from-gray-900 dark:to-gray-800">
-              <Monitor size={22} />
-              <span class="text-base font-medium text-neutral-700 dark:text-neutral-200">Analyse de données et mesure de performance</span>
-            </div>
-
-            <div class="flex flex-shrink-0 items-center gap-2 rounded-xl bg-gradient-to-b from-[#f7f8f0] to-[#f1f2f9] px-5 py-4 dark:from-gray-900 dark:to-gray-800">
-              <Mail size={22} />
-              <span class="text-base font-medium text-neutral-700 dark:text-neutral-200">Gestion de la relation client et e-mailing</span>
-            </div>
-
-            <div class="flex flex-shrink-0 items-center gap-2 rounded-xl bg-gradient-to-b from-[#f7f8f0] to-[#f1f2f9] px-5 py-4 dark:from-gray-900 dark:to-gray-800">
-              <Palette size={22} />
-              <span class="text-base font-medium text-neutral-700 dark:text-neutral-200">Stratégie éditoriale et création de contenu</span>
-            </div>
-
-            <div class="flex flex-shrink-0 items-center gap-2 rounded-xl bg-gradient-to-b from-[#f7f8f0] to-[#f1f2f9] px-5 py-4 dark:from-gray-900 dark:to-gray-800">
-              <Smartphone size={22} />
-              <span class="text-base font-medium text-neutral-700 dark:text-neutral-200">Réseaux sociaux et animation de communauté</span>
-            </div>
-
-            <div class="flex flex-shrink-0 items-center gap-2 rounded-xl bg-gradient-to-b from-[#f7f8f0] to-[#f1f2f9] px-5 py-4 dark:from-gray-900 dark:to-gray-800">
-              <Code size={22} />
-              <span class="text-base font-medium text-neutral-700 dark:text-neutral-200">Optimisation du taux de conversion</span>
-            </div>
-
-            <div class="flex flex-shrink-0 items-center gap-2 rounded-xl bg-gradient-to-b from-[#f7f8f0] to-[#f1f2f9] px-5 py-4 dark:from-gray-900 dark:to-gray-800">
-              <Globe size={22} />
-              <span class="text-base font-medium text-neutral-700 dark:text-neutral-200">Automatisation des campagnes et parcours clients</span>
-            </div>
           </div>
         </section>
 
@@ -455,7 +410,9 @@ const experiences = [
 </Layout>
 
 <script>
-  const countries = [
+  type CountryPoint = [name: string, lat: number, lon: number];
+
+  const countries: CountryPoint[] = [
     ["Albanie", 41.15, 20.17],
     ["Algérie", 28.03, 1.66],
     ["Allemagne", 51.16, 10.45],
@@ -482,19 +439,22 @@ const experiences = [
     ["États-Unis", 37.09, -95.71],
   ];
 
-  const canvas = document.querySelector("#travel-globe");
-  const tooltip = document.querySelector("#globe-tooltip");
+  const canvas = document.querySelector<HTMLCanvasElement>("#travel-globe");
+  const tooltip = document.querySelector<HTMLElement>("#globe-tooltip");
 
   if (canvas && tooltip) {
     const ctx = canvas.getContext("2d");
+    if (!ctx) {
+      throw new Error("Impossible d’initialiser le canvas du globe.");
+    }
     let rotation = -18;
     let dragging = false;
     let paused = false;
     let lastX = 0;
-    let selectedCountry = null;
+    let selectedCountry: CountryPoint | null = null;
     let animationFrame = 0;
 
-    const project = (lat, lon, angle) => {
+    const project = (lat: number, lon: number, angle: number) => {
       const phi = (lat * Math.PI) / 180;
       const lambda = ((lon + angle) * Math.PI) / 180;
 
@@ -570,7 +530,7 @@ const experiences = [
 
         const px = cx + point.x * radius;
         const py = cy - point.y * radius;
-        const isSelected = selectedCountry?.name === name;
+        const isSelected = selectedCountry?.[0] === name;
         const size = isSelected ? 5.5 : 3.2 + Math.max(point.z, 0) * 2;
 
         ctx.beginPath();
@@ -620,7 +580,7 @@ const experiences = [
       ctx.fillText("PAYS VISITÉS", cx, cy + radius + 32);
     };
 
-    const getCountryAtPosition = (event) => {
+    const getCountryAtPosition = (event: PointerEvent | MouseEvent): CountryPoint | null => {
       const rect = canvas.getBoundingClientRect();
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
@@ -630,7 +590,7 @@ const experiences = [
       const cy = height / 2 - 8;
       const radius = Math.min(width * 0.32, height * 0.43);
 
-      let nearest = null;
+      let nearest: CountryPoint | null = null;
       let nearestDistance = Infinity;
 
       countries.forEach(([name, lat, lon]) => {
@@ -643,7 +603,7 @@ const experiences = [
 
         if (distance < nearestDistance && distance < 18) {
           nearestDistance = distance;
-          nearest = { name, lat, lon };
+          nearest = [name, lat, lon];
         }
       });
 
@@ -664,14 +624,14 @@ const experiences = [
       if (!dragging) paused = false;
     });
 
-    canvas.addEventListener("pointerdown", (event) => {
+    canvas.addEventListener("pointerdown", (event: PointerEvent) => {
       dragging = true;
       paused = true;
       lastX = event.clientX;
       canvas.setPointerCapture(event.pointerId);
     });
 
-    canvas.addEventListener("pointermove", (event) => {
+    canvas.addEventListener("pointermove", (event: PointerEvent) => {
       if (!dragging) return;
       rotation += (event.clientX - lastX) * 0.45;
       lastX = event.clientX;
@@ -687,7 +647,7 @@ const experiences = [
       paused = false;
     });
 
-    canvas.addEventListener("click", (event) => {
+    canvas.addEventListener("click", (event: MouseEvent) => {
       const country = getCountryAtPosition(event);
 
       if (!country) {
@@ -698,7 +658,7 @@ const experiences = [
       }
 
       selectedCountry = country;
-      tooltip.textContent = `${country.name} · pays visité`;
+      tooltip.textContent = `${country[0]} · pays visité`;
       draw();
     });
 
