@@ -2,14 +2,14 @@
 // Define properties accepted by the component
 interface Props {
   imageUrl: string; // Required
-  title?: string; // Optional, default "Home"
+  title?: string; // Facultatif, valeur par défaut : "Accueil"
   link?: string; // Optional, can be empty
 }
 
 // Set default values and receive incoming properties
 const {
   imageUrl,
-  title = "Home",
+  title = "Accueil",
   link = ""
 } = Astro.props;
 ---

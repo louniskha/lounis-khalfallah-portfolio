@@ -3,7 +3,7 @@ import works from "@/collections/works.json";
 import WorkCard from "@/components/cards/WorkCard.astro";
 
 interface Props {
-  limit?: number; // 限制显示的项目数量
+  limit?: number; // Nombre maximum de projets à afficher
 }
 
 interface Work {
@@ -18,10 +18,10 @@ interface Work {
 
 const { limit } = Astro.props;
 
-// 获取项目列表
+// Récupération de la liste des projets
 let allWorks = works as Work[];
 
-// 如果指定了 limit，使用 limit
+// Si une limite est définie, afficher uniquement les premiers projets
 if (limit !== undefined) {
   allWorks = works.slice(0, limit) as Work[];
 }
@@ -29,22 +29,23 @@ if (limit !== undefined) {
 
 <section class="py-8 md:py-8">
   <div class="space-y-8 md:space-y-10">
-    <!-- 所有项目全宽显示 -->
-    {allWorks
-      .filter(work => work.isShow !== false)
-      .map((work, index) => (
-        <WorkCard
-          name={work.name}
-          description={work.description}
-          image={work.image}
-          url={work.url}
-          tags={work.tags}
-          video={work.video}
-          isShow={work.isShow}
-          layout="featured"
-          index={index}
-        />
-      ))}
+    <!-- Affichage des projets en pleine largeur -->
+    {
+      allWorks
+        .filter((work) => work.isShow !== false)
+        .map((work, index) => (
+          <WorkCard
+            name={work.name}
+            description={work.description}
+            image={work.image}
+            url={work.url}
+            tags={work.tags}
+            video={work.video}
+            isShow={work.isShow}
+            layout="featured"
+            index={index}
+          />
+        ))
+    }
   </div>
 </section>
-
